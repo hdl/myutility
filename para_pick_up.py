@@ -5,11 +5,9 @@ import glob
 from optparse import OptionParser
 
 parser = OptionParser()
-parser.add_option("-f", "--file",dest="filename",help="specify the file you want to process, 'all' means all")
+parser.add_option("-f", "--file",dest="filename",help="specify the file you want to process, 'all' means all the file in current dirctory")
 parser.add_option("-p", "--para",dest="parameter",help="specify the parameter you want to get")
 (options, args) = parser.parse_args()
-#print options.filename
-#print options.parameter
 
 parameter_list=options.parameter.split()
 
