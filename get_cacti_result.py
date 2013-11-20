@@ -211,11 +211,15 @@ def main():
 	print "L2data cycles:",l2data_int
 	print "RuuRAM cycles:",'1'
 
-	if(options.filename!="NULL"):
-		filename_list=options.filename.split() 
+	if(options.filename=="NULL"):
+		print "no files need to add"
+	else if("*." in options.filename):
+		filename_list=glob.glob(options.filename)
 		add_to_file(filename_list,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_list[0])# the last one is l2 inst NULL option
 	else:
-		print "no files need to add"
+		filename_list=options.filename.split() 
+		add_to_file(filename_list,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_list[0])# the last one is l2 inst NULL option
+		
 
 if __name__ == '__main__':
     main()
