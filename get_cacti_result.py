@@ -140,8 +140,8 @@ def replace(filename,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_null_str
             line ="-cache:il2lat	"+str(l2inst_int) 
         if("-cache:dl2lat" in line):
 			line ="-cache:dl2lat	"+str(l2data_int)
-        if(l2inst_null_str=="NULL" and "-cache:il2" in line):
-			line ="-cache:il2		dl2 "
+        if(l2inst_null_str=="NULL" and "-cache:il2  " in line):
+			line ="-cache:il2													dl2 "
         new_file.write(line)
     #close temp file
     new_file.close()
