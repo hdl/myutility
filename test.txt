@@ -1,20 +1,38 @@
-# l1 data cache hit latency (in cycles)
--cache:dl1lat                     3 
+# load/store queue (LSQ) size
+-lsq:size                         16 
 
-# l2 data cache config, i.e., {<config>|none}
+# l1 data cache config, i.e., {<config>|none}<name>:<nsets>:<bsize>:<assoc>:<repl> 
+-cache:dl1             dl1:128:32:4:l 
+
+# l1 data cache hit latency (in cycles)
+-cache:dl1lat	2# l2 data cache config, i.e., {<config>|none}
 -cache:dl2             ul2:1024:64:8:l 
 
 # l2 data cache hit latency (in cycles)
--cache:dl2lat                     7 
-
-# l1 inst cache config, i.e., {<config>|dl1|dl2|none}
+-cache:dl2lat	5# l1 inst cache config, i.e., {<config>|dl1|dl2|none}
 -cache:il1             il1:256:32:2:f 
 
 # l1 instruction cache hit latency (in cycles)
--cache:il1lat                     2 
-
-# l2 instruction cache config, i.e., {<config>|dl2|none}
--cache:il2                      dl2 
-
+-cache:il1lat		1# l2 instruction cache config, i.e., {<config>|dl2|none}
+-cache:il2		dl2 
 # l2 instruction cache hit latency (in cycles)
--cache:il2lat                     6 
+-cache:il2		dl2 # flush caches on system calls
+-cache:flush     false 
+
+# convert 64-bit inst addresses to 32-bit inst equivalents
+-cache:icompress              false 
+
+# memory access latency (<first_chunk> <inter_chunk>)
+-mem:lat               150 20 
+
+# memory access bus width (in bytes)
+-mem:width                        8 
+
+# instruction TLB config, i.e., {<config>|none}
+-tlb:itlb              itlb:16:4096:4:l 
+
+# data TLB config, i.e., {<config>|none}
+-tlb:dtlb              dtlb:32:4096:4:l 
+
+# inst/data TLB miss latency (in cycles)
+-tlb:lat                         150 

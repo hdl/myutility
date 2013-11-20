@@ -6,7 +6,9 @@ import sys
 import os
 import glob
 from optparse import OptionParser
-import fileinput
+from tempfile import mkstemp
+from shutil import move
+from os import remove, close
 
 def get_normal(cache_size,line_size,assoc,nrbanks,technode):
 	url = 'http://quid.hpl.hp.com:9081/cacti/index.y'  
@@ -72,7 +74,7 @@ def get_detai(cache_size,line_size,assoc,read_ports,write_ports,nr_bits_read_out
 		nr_int=int(nr_bits_read_out)
 		nr_int = nr_int -1
 		nr_bits_read_out=str(nr_int)
-		print "recursion"
+		print "cache recursion for nr_bits_read_out--"
 		return get_detai(cache_size,line_size,assoc,rwports,read_ports,write_ports,nr_bits_read_out,tagbits)	
 		
 def get_sram(cache_size,read_ports,write_ports,nr_bits_read_out):
@@ -115,7 +117,7 @@ def get_sram(cache_size,read_ports,write_ports,nr_bits_read_out):
 		nr_int=int(nr_bits_read_out)
 		nr_int = nr_int-1
 		nr_bits_read_out=str(nr_int)
-		print "recursion"
+		print "sram recursion for nr_bits_read_out--"
 		return get_sram(cache_size,read_ports,write_ports,nr_bits_read_out)
 def get_min_int(float_a):
 	int_a=int(float_a)
@@ -124,22 +126,45 @@ def get_min_int(float_a):
 	else:
 		return int_a
 
-def replaceline(file,searchExp,replaceExp):
-    for line in fileinput.input(file, inplace=1):
-        if searchExp in line:
-            line = line.replace(searchExp,replaceExp)
-        sys.stdout.write(line)
+def replace(filename,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_null_str):
+    #Create temp file
+    fh, abs_path = mkstemp()
+    new_file = open(abs_path,'w')
+    old_file = open(filename)
+    for line in old_file:
+        if("-cache:il1lat" in line):
+            line ="-cache:il1lat	"+str(l1inst_int) 
+        if("-cache:dl1lat" in line):
+			line ="-cache:dl1lat	"+str(l1data_int) 
+        if("-cache:il2lat" in line):
+            line ="-cache:il2lat	"+str(l2inst_int) 
+        if("-cache:dl2lat" in line):
+			line ="-cache:dl2lat	"+str(l2data_int)
+        if(l2inst_null_str=="NULL" and "-cache:il2" in line):
+			line ="-cache:il2		dl2 "
+        new_file.write(line)
+    #close temp file
+    new_file.close()
+    close(fh)
+    old_file.close()
+    #Remove original file
+    remove(filename)
+    #Move new file
+    move(abs_path, filename)
 
-def add_to_file(filename_list,l1inst_int,l1data_int,l2inst_int,l2data_int):
+
+def add_to_file(filename_list,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_null_str):
+	print "replace new latency for the follwing files:"
 	for filename in filename_list:
-		replaceline(filename,"-cache:dl1lat$","-cache:dl1lat "+str(l1data_int))
+		print filename
+		replace(filename,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_null_str)
 
 def main():
 
 	parser = OptionParser()
 	parser.add_option("-a", "--l1inst",dest="l1inst",help="cache_size, line_size,assoc,read_ports, write_ports, nr_bits_read_out")
 	parser.add_option("-b", "--l1data",dest="l1data",help="")
-	parser.add_option("-c", "--l2inst",dest="l2inst",help="")
+	parser.add_option("-c", "--l2inst",dest="l2inst",help="can be NULL")
 	parser.add_option("-d", "--l2data",dest="l2data",help="")
 	parser.add_option("-s", "--sram",dest="sram",help="cache_size, read_ports, write_ports, nr_bits_read_out")
 	parser.add_option("-f", "--filename",dest="filename",help="add the result to the specified files")
@@ -154,11 +179,13 @@ def main():
 
 	l1inst_access_time=get_detai(l1inst_list[0],l1inst_list[1],l1inst_list[2] ,l1inst_list[3] ,l1inst_list[4],l1inst_list[5],'29') 
 	l1data_access_time=get_detai(l1data_list[0],l1data_list[1],l1data_list[2] ,l1data_list[3] ,l1data_list[4],l1data_list[5],'30') 
-	l2inst_access_time=get_detai(l2inst_list[0],l2inst_list[1],l2inst_list[2] ,l2inst_list[3] ,l2inst_list[4],l2inst_list[5],'28') 
-	if l2data_list[0]=='NULL' :
-		l2data_access_time=l2inst_access_time
+	l2data_access_time=get_detai(l2data_list[0],l2data_list[1],l2data_list[2] ,l2data_list[3] ,l2data_list[4],l2data_list[5],'28') 
+	
+	if l2inst_list[0]=='NULL' :
+		l2inst_access_time=l2data_access_time
 	else:
-		l2data_access_time=get_detai(l2data_list[0],l2data_list[1],l2data_list[2] ,l2data_list[3] ,l2data_list[4],l2data_list[5],'28') 
+	    l2inst_access_time=get_detai(l2inst_list[0],l2inst_list[1],l2inst_list[2] ,l2inst_list[3] ,l2inst_list[4],l2inst_list[5],'28') 
+	
 	sram_access_time=get_sram(sram_list[0],sram_list[1],sram_list[2] ,sram_list[3]) 
 	
 	print "L1inst:",l1inst_access_time	
@@ -185,7 +212,8 @@ def main():
 	print "RuuRAM cycles:",'1'
 
 	if(options.filename!="NULL"):
-		add_to_file(options.filename,l1inst_int,l1data_int,l2inst_int,l2data_int)
+		filename_list=options.filename.split() 
+		add_to_file(filename_list,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_list[0])# the last one is l2 inst NULL option
 	else:
 		print "no files need to add"
 
