@@ -19,7 +19,13 @@ def get_normal(cache_size,line_size,assoc,nrbanks,technode):
 	the_page = response.read()  #read
 	return the_page
 
-def get_detai(cache_size,line_size,assoc,rwports,read_ports,write_ports,nr_bits_read_out,tagbits):
+def get_detai(cache_size,line_size,assoc,read_ports,write_ports,nr_bits_read_out,tagbits):
+	'''The parameters are:
+	   cache_size, line_size,assoc,read_ports, write_ports, nr_bits_read_out, tagbits
+	   They are string
+	   nr_bits_read_out may casue exception, but this function can recursion
+	   tagbits is 30 for L1Data, 29 forL1L, 26for L2 
+	'''
 	url = 'http://quid.hpl.hp.com:9081/cacti/detailed.y'  
 	values = {'cache_size' : cache_size,  
 	          'line_size' : line_size,
@@ -54,10 +60,20 @@ def get_detai(cache_size,line_size,assoc,rwports,read_ports,write_ports,nr_bits_
 		if len(re.findall(r"Access time \(ns\): (.+?)<br>",the_page)) == 1 :
 			return re.findall(r"Access time \(ns\): (.+?)<br>",the_page)[0]
 		else:
-			return "not1accesstime"
+			return get_detai(cache_size,line_size,assoc,rwports,read_ports,write_ports,nr_bits_read_out,tagbits)
 	else : 
-		return "exception"
+		nr_int=int(nr_bits_read_out)
+		nr_int = nr_int -1
+		nr_bits_read_out=str(nr_int)
+		print "recursion"
+		return get_detai(cache_size,line_size,assoc,rwports,read_ports,write_ports,nr_bits_read_out,tagbits)	
+		
 def get_sram(cache_size,read_ports,write_ports,nr_bits_read_out):
+	'''The parameters are:
+	   cache_size, read_ports, write_ports, nr_bits_read_out
+		nr_bits_read_out may casue exception, but this function can recursion
+	   They are string
+	'''
 	url = 'http://quid.hpl.hp.com:9081/cacti/sram.y'  
 	values = {'cache_size' : cache_size,  
 	          'nrbanks' : '1',
@@ -87,11 +103,22 @@ def get_sram(cache_size,read_ports,write_ports,nr_bits_read_out):
 		if len(re.findall(r"Access time \(ns\): (.+?)<br>",the_page)) == 1 :
 			return re.findall(r"Access time \(ns\): (.+?)<br>",the_page)[0]
 		else:
-			return "not1accesstime"
+			return get_sram(cache_size,read_ports,write_ports,nr_bits_read_out)
 	else : 
-		return "exception"
+		nr_int=int(nr_bits_read_out)
+		nr_int = nr_int-1
+		nr_bits_read_out=str(nr_int)
+		print "recursion"
+		return get_sram(cache_size,read_ports,write_ports,nr_bits_read_out)
+
 def main():
 	the_result = get_sram('616','7','6','154')
-	print "Access time:", the_result	
+	print "Sram Access time:", the_result
+
+	the_result= get_detai('16384','32','2','1','1','256','29')
+	print "L1 instruction:", the_result
+	#cache_size, line_size,assoc,read_ports, write_ports, nr_bits_read_out, tagbits 
+
+
 if __name__ == '__main__':
     main()
