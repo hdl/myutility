@@ -6,6 +6,7 @@ import sys
 import os
 import glob
 from optparse import OptionParser
+import fileinput
 
 def get_normal(cache_size,line_size,assoc,nrbanks,technode):
 	url = 'http://quid.hpl.hp.com:9081/cacti/index.y'  
@@ -122,6 +123,17 @@ def get_min_int(float_a):
 		return int_a+1
 	else:
 		return int_a
+
+def replaceline(file,searchExp,replaceExp):
+    for line in fileinput.input(file, inplace=1):
+        if searchExp in line:
+            line = line.replace(searchExp,replaceExp)
+        sys.stdout.write(line)
+
+def add_to_file(filename_list,l1inst_int,l1data_int,l2inst_int,l2data_int):
+	for filename in filename_list:
+		replaceline(filename,"-cache:dl1lat$","-cache:dl1lat "+str(l1data_int))
+
 def main():
 
 	parser = OptionParser()
@@ -129,7 +141,9 @@ def main():
 	parser.add_option("-b", "--l1data",dest="l1data",help="")
 	parser.add_option("-c", "--l2inst",dest="l2inst",help="")
 	parser.add_option("-d", "--l2data",dest="l2data",help="")
-	parser.add_option("-f", "--sram",dest="sram",help="cache_size, read_ports, write_ports, nr_bits_read_out")
+	parser.add_option("-s", "--sram",dest="sram",help="cache_size, read_ports, write_ports, nr_bits_read_out")
+	parser.add_option("-f", "--filename",dest="filename",help="add the result to the specified files")
+
 	(options, args) = parser.parse_args()	
 
 	l1inst_list=options.l1inst.split()
@@ -169,6 +183,11 @@ def main():
 	print "L2inst cycles:",l2inst_int
 	print "L2data cycles:",l2data_int
 	print "RuuRAM cycles:",'1'
+
+	if(options.filename!="NULL"):
+		add_to_file(options.filename,l1inst_int,l1data_int,l2inst_int,l2data_int)
+	else:
+		print "no files need to add"
 
 if __name__ == '__main__':
     main()

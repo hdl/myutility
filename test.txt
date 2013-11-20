@@ -1,0 +1,20 @@
+# l1 data cache hit latency (in cycles)
+-cache:dl1lat                     3 
+
+# l2 data cache config, i.e., {<config>|none}
+-cache:dl2             ul2:1024:64:8:l 
+
+# l2 data cache hit latency (in cycles)
+-cache:dl2lat                     7 
+
+# l1 inst cache config, i.e., {<config>|dl1|dl2|none}
+-cache:il1             il1:256:32:2:f 
+
+# l1 instruction cache hit latency (in cycles)
+-cache:il1lat                     2 
+
+# l2 instruction cache config, i.e., {<config>|dl2|none}
+-cache:il2                      dl2 
+
+# l2 instruction cache hit latency (in cycles)
+-cache:il2lat                     6 
