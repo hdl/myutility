@@ -213,7 +213,7 @@ def main():
 
 	if(options.filename=="NULL"):
 		print "no files need to add"
-	else if("*." in options.filename):
+	elif("*." in options.filename):
 		filename_list=glob.glob(options.filename)
 		add_to_file(filename_list,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_list[0])# the last one is l2 inst NULL option
 	else:
