@@ -133,15 +133,15 @@ def replace(filename,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_null_str
     old_file = open(filename)
     for line in old_file:
         if("-cache:il1lat" in line):
-            line ="-cache:il1lat	"+str(l1inst_int) 
+            line ="-cache:il1lat	"+str(l1inst_int)+"\n" 
         if("-cache:dl1lat" in line):
-			line ="-cache:dl1lat	"+str(l1data_int) 
+			line ="-cache:dl1lat	"+str(l1data_int)+"\n" 
         if("-cache:il2lat" in line):
-            line ="-cache:il2lat	"+str(l2inst_int) 
+            line ="-cache:il2lat	"+str(l2inst_int)+"\n" 
         if("-cache:dl2lat" in line):
-			line ="-cache:dl2lat	"+str(l2data_int)
+			line ="-cache:dl2lat	"+str(l2data_int)+"\n"
         if(l2inst_null_str=="NULL" and "-cache:il2  " in line):
-			line ="-cache:il2													dl2 "
+			line ="-cache:il2							dl2 \n"
         new_file.write(line)
     #close temp file
     new_file.close()
