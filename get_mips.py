@@ -86,6 +86,15 @@ def print_inst_cycle(filename_list):
 	print "mcf	%s	%s"%(mcf_inst,mcf_cycle)
 	print "applu	%s	%s"%(applu_inst,applu_cycle)
 	print ""
+
+def get_ram_access_time(filename):
+	fp=open(filename)
+	for line in fp.readlines():
+		if "#ram_access_time" in line:
+			return float(line.split()[1])
+			fp.close()
+
+
 def main():
 
 	parser = OptionParser()
@@ -100,17 +109,23 @@ def main():
 	get_inst_cycle(filename_list)
 	print_inst_cycle(filename_list)
 	
-	if type(time_ns_str)==type(None):
+	cycles=int(art_cycle)+int(twolf_cycle)+int(mcf_cycle)+int(applu_cycle)
+	insts=int(art_inst)+int(twolf_inst)+int(mcf_inst)+int(applu_inst)	
+	print "sum(insts)/sum(cycles)=",float(insts)/float(cycles)
+	print ""
+
+	if type(options.time)==type(None):
 		print "Have no options for time, quit"
 		return 0
-	elif "cfg" in time_ns_str:
-		print "time get from file time_ns_str"
-	else:
-		print "the time per cycles you input is %s(ns)"%(options.time)
-		cycles=int(art_cycle)+int(twolf_cycle)+int(mcf_cycle)+int(applu_cycle)
-		insts=int(art_inst)+int(twolf_inst)+int(mcf_inst)+int(applu_inst)
+	elif ".cfg" in options.time:
+		print "use ram_access_time in file %s"%options.time
+		print "the time is(ns) ", get_ram_access_time(options.time)
 		print "MIPS:	",
-		print float(insts)/float(cycles)/float(options.time)**(-9)
+		print float(insts)/float(cycles)/get_ram_access_time(options.time)*(10**(3))
+	else:
+		print "use access time you input %s(ns)"%(options.time)
+		print "MIPS:	",
+		print float(insts)/float(cycles)/float(options.time)*(10**(3))
 
 if __name__ == '__main__':
     main()

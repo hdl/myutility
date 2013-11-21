@@ -154,14 +154,16 @@ def replace(filename,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_null_str
 
 
 def add_to_file(filename_list,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_null_str):
+	print "modify latencies for the follwing files:"
 	for filename in filename_list:
-		print "modify latencies for file", filename 
+		print filename 
 		replace(filename,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_null_str)
 
 def add_ram_time_to_cfg(filename_list,sram_access_time):
+	print "append ram_access_time for the follwing files:"
 	for filename in filename_list:
-		print "add #ram_aacess_time		time for file",filename
-		open(filename,"a+b").write("\n\n#ram_aacess_time			"+sram_access_time)
+		print filename
+		open(filename,"a+b").write("\n\n#ram_access_time			"+sram_access_time)
 		
 	
 def main():
@@ -173,12 +175,16 @@ def main():
 	parser.add_option("-d", "--l2data",dest="l2data",help="")
 	parser.add_option("-s", "--sram",dest="sram",help="cache_size, read_ports, write_ports, nr_bits_read_out")
 	parser.add_option("-f", "--filename",dest="filename",help="add the result to the specified files")
-	parser.add_option("-e", "--example",dest="example",help='''get_cacti_result.py -a "16384 32 2 1 1 256" -b "16384 32 4 2 2 256" -c "NULL" -d "524288 64 8 2 2 512" -s "616 13 9 154" -f "*.cfg"''')
 	(options, args) = parser.parse_args()	
 	
-	if(options.example!=""):
-		print '''cache parameter seqence: cache_size, line_size,assoc,read_ports, write_ports, nr_bits_read_out 
-sram parameter sequence: cache_size, read_ports, write_ports, nr_bits_read_out  	
+	if(type(options.l1inst)==type(None)):
+		print '''cache parameter seqence: 
+cache_size, line_size,assoc,read_ports, write_ports, nr_bits_read_out
+
+sram parameter sequence:
+cache_size, read_ports, write_ports, nr_bits_read_out
+
+example:
 get_cacti_result.py -a "16384 32 2 1 1 256" -b "16384 32 4 2 2 256" -c "NULL" -d "524288 64 8 2 2 512" -s "616 13 9 154" -f "*.cfg"'''
 		return 0
 	l1inst_list=options.l1inst.split()
