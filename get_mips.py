@@ -95,15 +95,22 @@ def main():
 	(options, args) = parser.parse_args()	
 	
 	filename_list=glob.glob(options.filename_list)
-	
+	time_ns_str=options.time
+
 	get_inst_cycle(filename_list)
 	print_inst_cycle(filename_list)
-
-	print "the time per cycles you input is %s(ns)"%(options.time)
-	cycles=int(art_cycle)+int(twolf_cycle)+int(mcf_cycle)+int(applu_cycle)
-	insts=int(art_inst)+int(twolf_inst)+int(mcf_inst)+int(applu_inst)
-	print "MIPS:	",
-	print float(insts)/float(cycles)/float(options.time)**(-9)
+	
+	if type(time_ns_str)==type(None):
+		print "Have no options for time, quit"
+		return 0
+	elif "cfg" in time_ns_str:
+		print "time get from file time_ns_str"
+	else:
+		print "the time per cycles you input is %s(ns)"%(options.time)
+		cycles=int(art_cycle)+int(twolf_cycle)+int(mcf_cycle)+int(applu_cycle)
+		insts=int(art_inst)+int(twolf_inst)+int(mcf_inst)+int(applu_inst)
+		print "MIPS:	",
+		print float(insts)/float(cycles)/float(options.time)**(-9)
 
 if __name__ == '__main__':
     main()
