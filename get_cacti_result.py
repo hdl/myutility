@@ -154,11 +154,16 @@ def replace(filename,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_null_str
 
 
 def add_to_file(filename_list,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_null_str):
-	print "replace new latency for the follwing files:"
 	for filename in filename_list:
-		print filename
+		print "modify latencies for file", filename 
 		replace(filename,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_null_str)
 
+def add_ram_time_to_cfg(filename_list,sram_access_time):
+	for filename in filename_list:
+		print "add #ram_aacess_time		time for file",filename
+		open(filename,"a+b").write("\n\n#ram_aacess_time			"+sram_access_time)
+		
+	
 def main():
 
 	parser = OptionParser()
@@ -217,13 +222,16 @@ get_cacti_result.py -a "16384 32 2 1 1 256" -b "16384 32 4 2 2 256" -c "NULL" -d
 	print "RuuRAM cycles:",'1'
 
 	if(options.filename=="NULL"):
-		print "no files need to add"
+		print "no files need to modify/add"
 	elif("*." in options.filename):
 		filename_list=glob.glob(options.filename)
 		add_to_file(filename_list,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_list[0])# the last one is l2 inst NULL option
+		add_ram_time_to_cfg(filename_list,sram_access_time)
 	else:
 		filename_list=options.filename.split() 
 		add_to_file(filename_list,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_list[0])# the last one is l2 inst NULL option
+		add_ram_time_to_cfg(filename_list,sram_access_time)
+
 		
 
 if __name__ == '__main__':
