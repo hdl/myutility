@@ -171,14 +171,16 @@ def main():
 	parser = OptionParser()
 	parser.add_option("-a", "--l1inst",dest="l1inst",help="cache_size, line_size,assoc,read_ports, write_ports, nr_bits_read_out")
 	parser.add_option("-b", "--l1data",dest="l1data",help="")
-	parser.add_option("-c", "--l2inst",dest="l2inst",help="can be NULL")
-	parser.add_option("-d", "--l2data",dest="l2data",help="")
+	parser.add_option("-c", "--l2inst",dest="l2inst",help="")
+	parser.add_option("-d", "--l2data",dest="l2data",help="can be NULL")
 	parser.add_option("-s", "--sram",dest="sram",help="cache_size, read_ports, write_ports, nr_bits_read_out")
 	parser.add_option("-f", "--filename",dest="filename",help="add the result to the specified files")
 	(options, args) = parser.parse_args()	
 	
 	if(type(options.l1inst)==type(None)):
-		print '''cache parameter seqence: 
+		print '''-a l1inst, -b l1data, -c l2inst, -d l2data(can be NULL), -s ram, -f *.cfg
+
+cache parameter seqence: 
 cache_size, line_size,assoc,read_ports, write_ports, nr_bits_read_out
 
 sram parameter sequence:

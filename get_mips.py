@@ -99,7 +99,7 @@ def main():
 
 	parser = OptionParser()
 	#parser.add_option("-a", "--l1inst",dest="l1inst",help="cache_size, line_size,assoc,read_ports, write_ports, nr_bits_read_out")
-	parser.add_option("-t", "--time",dest="time",help="time of per cycle, ns")
+	parser.add_option("-t", "--time",dest="time",help="time of per cycle, ns or your .cfg file which include ram access time")
 	parser.add_option("-f", "--filename_list",dest="filename_list",help="make sure your 4 files share same part name, then use -f \"*___.___\"")
 	(options, args) = parser.parse_args()	
 	
