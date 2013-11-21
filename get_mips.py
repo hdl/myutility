@@ -30,6 +30,7 @@ def get_inst_cycle(filename_list):
 	global applu_inst
 	for filename in filename_list:
 		if "art" in filename:
+			print "get art form", filename
 			fp=open(filename)
 			for line in fp.readlines():
 				if "sim_num_insn" in line:
@@ -39,6 +40,7 @@ def get_inst_cycle(filename_list):
 					art_cycle=line.split()[1]
 			fp.close()
 		elif "twolf" in filename:
+			print "get twolf form", filename
 			fp=open(filename)
 			for line in fp.readlines():
 				if "sim_num_insn" in line:
@@ -47,6 +49,7 @@ def get_inst_cycle(filename_list):
 					twolf_cycle=line.split()[1]
 			fp.close()
 		elif "mcf" in filename:
+			print "get mcf form", filename
 			fp=open(filename)
 			for line in fp.readlines():
 				if "sim_num_insn" in line:
@@ -55,6 +58,7 @@ def get_inst_cycle(filename_list):
 					mcf_cycle=line.split()[1]
 			fp.close()
 		elif "applu" in filename:
+			print "get applu form", filename
 			fp=open(filename)
 			for line in fp.readlines():
 				if "sim_num_insn" in line:
