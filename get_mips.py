@@ -142,23 +142,21 @@ def main():
 	elif ".cfg" in options.time:
 		print "use ram_access_time in file %s"%options.time
 		ram_access_time=get_ram_access_time(options.time)
-
+		print "MIPS:		",float(insts)/float(cycles)/ram_access_time*(10**3)	
 		print "the time is(ns) ",ram_access_time 
 		print "art_mips:		",float(art_inst)/float(art_cycle)/ram_access_time*(10**3)
 		print "twolf_mips:		",float(twolf_inst)/float(twolf_cycle)/ram_access_time*(10**3)
 		print "mcf_mips:		",float(mcf_inst)/float(mcf_cycle)/ram_access_time*(10**3)
 		print "applu_mips:		",float(applu_inst)/float(applu_cycle)/ram_access_time*(10**3)
-		print "MIPS:		",float(insts)/float(cycles)/ram_access_time*(10**3)
 	else:
 		print "use access time you input %s(ns)"%(options.time)
 		ram_access_time=float(options.time)
-		
-		print "the time is(ns) ",ram_access_time 
+		print "the time is(ns) ",ram_access_time
+		print "MIPS:		",float(insts)/float(cycles)/ram_access_time*(10**3)
 		print "art_mips:		",float(art_inst)/float(art_cycle)/ram_access_time*(10**3)
 		print "twolf_mips:		",float(twolf_inst)/float(twolf_cycle)/ram_access_time*(10**3)
 		print "mcf_mips:		",float(mcf_inst)/float(mcf_cycle)/ram_access_time*(10**3)
 		print "applu_mips:		",float(applu_inst)/float(applu_cycle)/ram_access_time*(10**3)
-		print "MIPS:		",float(insts)/float(cycles)/ram_access_time*(10**3)
 
 if __name__ == '__main__':
     main()
