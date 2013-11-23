@@ -35,7 +35,6 @@ def get_inst_cycle(filename_list):
 			for line in fp.readlines():
 				if "sim_num_insn" in line:
 					art_inst=line.split()[1]
-					print art_inst
 				elif "sim_cycle" in line:
 					art_cycle=line.split()[1]
 			fp.close()
@@ -91,6 +90,23 @@ def print_inst_cycle(filename_list):
 	print "applu	%s	%s"%(applu_inst,applu_cycle)
 	print ""
 
+	print "art_inst:		%s"%(art_inst)
+	print "art_cycle:		%s"%(art_cycle)
+	print "art_inst/cycle:		%s"%(str(float(art_inst)/float(art_cycle)))
+
+	print "twolf_inst:		%s"%(twolf_inst)
+	print "twolf_cycle:		%s"%(twolf_cycle)
+	print "twolf_inst/cycle:	%s"%(str(float(twolf_inst)/float(art_cycle)))
+
+	print "mcf_inst:		%s"%(mcf_inst)
+	print "mcf_cycle:		%s"%(mcf_cycle)
+	print "mcf_inst/cycle:	%s"%(str(float(mcf_inst)/float(mcf_cycle)))
+
+	print "applu_inst:		%s"%(applu_inst)
+	print "applu_cycle:		%s"%(applu_cycle)
+	print "applu_inst/cycle:	%s"%(str(float(applu_inst)/float(applu_cycle)))
+	
+
 def get_ram_access_time(filename):
 	fp=open(filename)
 	for line in fp.readlines():
@@ -115,21 +131,34 @@ def main():
 	
 	cycles=int(art_cycle)+int(twolf_cycle)+int(mcf_cycle)+int(applu_cycle)
 	insts=int(art_inst)+int(twolf_inst)+int(mcf_inst)+int(applu_inst)	
-	print "sum(insts)/sum(cycles)=",float(insts)/float(cycles)
+	print "sum(insts)/sum(cycles):  ",float(insts)/float(cycles)
 	print ""
+
+	
 
 	if type(options.time)==type(None):
 		print "Have no options for time, quit"
 		return 0
 	elif ".cfg" in options.time:
 		print "use ram_access_time in file %s"%options.time
-		print "the time is(ns) ", get_ram_access_time(options.time)
-		print "MIPS:	",
-		print float(insts)/float(cycles)/get_ram_access_time(options.time)*(10**(3))
+		ram_access_time=get_ram_access_time(options.time)
+
+		print "the time is(ns) ",ram_access_time 
+		print "art_mips:		",float(art_inst)/float(art_cycle)/ram_access_time*(10**3)
+		print "twolf_mips:		",float(twolf_inst)/float(twolf_cycle)/ram_access_time*(10**3)
+		print "mcf_mips:		",float(mcf_inst)/float(mcf_cycle)/ram_access_time*(10**3)
+		print "applu_mips:		",float(applu_inst)/float(applu_cycle)/ram_access_time*(10**3)
+		print "MIPS:		",float(insts)/float(cycles)/ram_access_time*(10**3)
 	else:
 		print "use access time you input %s(ns)"%(options.time)
-		print "MIPS:	",
-		print float(insts)/float(cycles)/float(options.time)*(10**(3))
+		ram_access_time=float(options.time)
+		
+		print "the time is(ns) ",ram_access_time 
+		print "art_mips:		",float(art_inst)/float(art_cycle)/ram_access_time*(10**3)
+		print "twolf_mips:		",float(twolf_inst)/float(twolf_cycle)/ram_access_time*(10**3)
+		print "mcf_mips:		",float(mcf_inst)/float(mcf_cycle)/ram_access_time*(10**3)
+		print "applu_mips:		",float(applu_inst)/float(applu_cycle)/ram_access_time*(10**3)
+		print "MIPS:		",float(insts)/float(cycles)/ram_access_time*(10**3)
 
 if __name__ == '__main__':
     main()

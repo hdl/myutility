@@ -5,14 +5,14 @@ import glob
 from optparse import OptionParser
 
 parser = OptionParser()
-parser.add_option("-f", "--file",dest="filename",help="specify the file you want to process, 'all' means all the file in current dirctory")
+parser.add_option("-f", "--file",dest="filename",help="specify the file you want to process, *.mips means all the mips file in current dirctory")
 parser.add_option("-p", "--para",dest="parameter",help="specify the parameter you want to get")
 (options, args) = parser.parse_args()
 
 parameter_list=options.parameter.split()
 
-if "all" == options.filename:
-	file_list=glob.glob("./*.out")
+if "*" in options.filename:
+	file_list=glob.glob(options.filename)
 else:
 	file_list=options.filename.split()
 	
