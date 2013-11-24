@@ -133,18 +133,6 @@ def replace(filename,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_null_str
     move(abs_path, filename)
 
 
-def add_to_file(filename_list,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_null_str):
-	print "modify latencies for the follwing files:"
-	for filename in filename_list:
-		print filename 
-		replace(filename,l1inst_int,l1data_int,l2inst_int,l2data_int,l2inst_null_str)
-
-def add_ram_time_to_cfg(filename_list,sram_access_time):
-	print "append ram_access_time for the follwing files:"
-	for filename in filename_list:
-		print filename
-		open(filename,"a+b").write("\n\n#ram_access_time			"+sram_access_time)
-
 def get_min_int(float_a):
 	int_a=int(float_a)
 	if (float_a-int_a > 0):
@@ -230,7 +218,7 @@ def main():
 	
 	if(type(options.l1inst)==type(None)):
 		print "example:"
-		print '''python gen_config.py -a "256 32 2 l" -b "128 32 4 l" -c "1024 64 8 l" -d "1024 64 8 l" -r "32 2 1 1 1" -s "2 4 4 4" '''
+		print '''python gen_config.py -a "256 32 2 l" -b "128 32 4 l" -c "dl2" -d "1024 64 8 l" -r "32 2 1 1 1" -s "2 4 4 4" -f "test.cfg"''' 
 		return 0
 
 	
