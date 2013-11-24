@@ -52,13 +52,13 @@ def get_detai(cache_size,line_size,assoc,read_ports,write_ports,nr_bits_read_out
 		if len(re.findall(r"Access time \(ns\): (.+?)<br>",the_page)) == 1 :
 			return re.findall(r"Access time \(ns\): (.+?)<br>",the_page)[0]
 		else:
-			return get_detai(cache_size,line_size,assoc,rwports,read_ports,write_ports,nr_bits_read_out,tagbits)
+			return get_detai(cache_size,line_size,assoc,read_ports,write_ports,nr_bits_read_out,tagbits)
 	else : 
 		nr_int=int(nr_bits_read_out)
 		nr_int = nr_int -1
 		nr_bits_read_out=str(nr_int)
 		print "cache recursion for nr_bits_read_out--"
-		return get_detai(cache_size,line_size,assoc,rwports,read_ports,write_ports,nr_bits_read_out,tagbits)	
+		return get_detai(cache_size,line_size,assoc,read_ports,write_ports,nr_bits_read_out,tagbits)	
 		
 def get_sram(cache_size,read_ports,write_ports,nr_bits_read_out):
 	'''The parameters are:
