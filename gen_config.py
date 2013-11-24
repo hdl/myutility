@@ -181,13 +181,45 @@ def ruu(ruu_size, ialu, imult, fpalu, fpmult, memport, ifqsize, issue_width, dec
 	ruu_list=(str(cache_size),str(ruu_read_port),str(ruu_write_port),str(BitPerRuuEnt))
 	return ruu_list
 
-def gen_content_list(options):
+def gen_content_list(options,l1inst_int,l1data_int,l2inst_int,l2data_int,sram_access_time):
+	
+	l1inst_list=options.l1inst.split()
+	l1data_list=options.l1data.split()
+	l2data_list=options.l2data.split()
+
+	if options.l2inst=="dl2":
+		l2inst_list=l2data_list
+	else:
+		l2inst_list=options.l2inst.split()
+	ruu_list=options.ruu.split()
+
+	share_list=options.share.split()
+
+	content_list = []
+	content_list.append(ruu_list[1]) #ifqsize
+	content_list.append(share_list[3])
+	content_list.append(share_list[2])
+	content_list.append(ruu_list[0])
+	content_list.append("dl1:"+l1data_list[0]+":"+l1data_list[1]+":"+l1data_list[2]+":"+l1data_list[3])
+	content_list.append(str(l1data_int))
+	content_list.append("ul2:"+l2data_list[0]+":"+l2data_list[1]+":"+l2data_list[2]+":"+l2data_list[3])
+	content_list.append(str(l2data_int))
+	content_list.append("il1:"+l1inst_list[0]+":"+l1inst_list[1]+":"+l1inst_list[2]+":"+l1inst_list[3])
+	content_list.append(str(l1inst_int))
+	content_list.append("dl2")
+	content_list.append(str(l2inst_int))
+	content_list.append(ruu_list[1])	
+	content_list.append(ruu_list[2])
+	content_list.append(share_list[0])
+	content_list.append(ruu_list[2])
+	content_list.append(ruu_list[3])
+	content_list.append(sram_access_time) 
 	return content_list
 def main():
 
 	parser = OptionParser()
 	
-	parser.add_option("-a", "--l1inst",dest="l1inst",help="sets, bsize, assoc")
+	parser.add_option("-a", "--l1inst",dest="l1inst",help="sets, bsize, assoc, replace policy(l r f)")
 	parser.add_option("-b", "--l1data",dest="l1data",help="")
 	parser.add_option("-c", "--l2inst",dest="l2inst",help="can be dl2")
 	parser.add_option("-d", "--l2data",dest="l2data",help="")
@@ -250,10 +282,174 @@ def main():
 	print "L2data cycles:",l2data_int
 	print "RuuRAM cycles:",'1'
 	
-	content_list = gen_content_list(options)
+	content_list = gen_content_list(options,l1inst_int,l1data_int,l2inst_int,l2data_int,sram_access_time)
+	print content_list
+	print len(content_list)
 	filecontent='''
-	'''%(content_list)
+# load configuration from a file
+# -config               
 
+# dump configuration to a file
+# -dumpconfig           
+
+# print help message
+# -h                          false 
+
+# verbose operation
+# -v                          false 
+
+# enable debug message
+# -d                          false 
+
+# start in Dlite debugger
+# -i                          false 
+
+# random number generator seed (0 for timer seed)
+-seed                             1 
+
+# initialize and terminate immediately
+# -q                          false 
+
+# restore EIO trace execution from <fname>
+# -chkpt                     <null> 
+
+# redirect simulator output to file (non-interactive only)
+# -redir:sim                 <null> 
+
+# redirect simulated program output to file
+# -redir:prog                <null> 
+
+# simulator scheduling priority
+-nice                             0 
+
+# maximum number of inst's to execute
+-max:inst                         0 
+
+# number of insts skipped before timing starts
+-fastfwd                          0 
+
+# generate pipetrace, i.e., <fname|stdout|stderr> <range>
+# -ptrace                    <null> 
+
+# instruction fetch queue size (in insts)
+-fetch:ifqsize                    %s 
+
+# extra branch mis-prediction latency
+-fetch:mplat                      3 
+
+# speed of front-end of machine relative to execution core
+-fetch:speed                      1 
+
+# branch predictor type {nottaken|taken|perfect|bimod|2lev|comb}
+-bpred                        bimod 
+
+# bimodal predictor config (<table size>)
+-bpred:bimod           2048 
+
+# 2-level predictor config (<l1size> <l2size> <hist_size> <xor>)
+-bpred:2lev            1 1024 8 0 
+
+# combining predictor config (<meta_table_size>)
+-bpred:comb            1024 
+
+# return address stack size (0 for no return stack)
+-bpred:ras                        8 
+
+# BTB config (<num_sets> <associativity>)
+-bpred:btb             512 4 
+
+# speculative predictors update in {ID|WB} (default non-spec)
+# -bpred:spec_update         <null> 
+
+# instruction decode B/W (insts/cycle)
+-decode:width                     %s 
+
+# instruction issue B/W (insts/cycle)
+-issue:width                      %s 
+
+# run pipeline with in-order issue
+-issue:inorder                false 
+
+# issue instructions down wrong execution paths
+-issue:wrongpath               true 
+
+# instruction commit B/W (insts/cycle)
+-commit:width                     4 
+
+# register update unit (RUU) size
+-ruu:size                        %s 
+
+# load/store queue (LSQ) size
+-lsq:size                         8 
+
+# l1 data cache config, i.e., {<config>|none}
+-cache:dl1             %s 
+
+# l1 data cache hit latency (in cycles)
+-cache:dl1lat                     %s 
+
+# l2 data cache config, i.e., {<config>|none}
+-cache:dl2             %s 
+
+# l2 data cache hit latency (in cycles)
+-cache:dl2lat                     %s 
+
+# l1 inst cache config, i.e., {<config>|dl1|dl2|none}
+-cache:il1              %s
+
+# l1 instruction cache hit latency (in cycles)
+-cache:il1lat                     %s 
+
+# l2 instruction cache config, i.e., {<config>|dl2|none}
+-cache:il2                      %s 
+
+# l2 instruction cache hit latency (in cycles)
+-cache:il2lat                     %s 
+
+# flush caches on system calls
+-cache:flush                  false 
+
+# convert 64-bit inst addresses to 32-bit inst equivalents
+-cache:icompress              false 
+
+# memory access latency (<first_chunk> <inter_chunk>)
+-mem:lat               18 2 
+
+# memory access bus width (in bytes)
+-mem:width                        8 
+
+# instruction TLB config, i.e., {<config>|none}
+-tlb:itlb              itlb:16:4096:4:l 
+
+# data TLB config, i.e., {<config>|none}
+-tlb:dtlb              dtlb:32:4096:4:l 
+
+# inst/data TLB miss latency (in cycles)
+-tlb:lat                         30 
+
+# total number of integer ALU's available
+-res:ialu                         %s 
+
+# total number of integer multiplier/dividers available
+-res:imult                        %s 
+
+# total number of memory system ports available (to CPU)
+-res:memport                      %s
+
+# total number of floating point ALU's available
+-res:fpalu                        %s 
+
+# total number of floating point multiplier/dividers available
+-res:fpmult                       %s 
+
+# profile stat(s) against text addr's (mult uses ok)
+# -pcstat                    <null> 
+
+# operate in backward-compatible bugs mode (for testing only)
+-bugcompat                    false
+
+#ram_access_time                  %s 
+	'''%tuple(content_list) 	
 	fp=open(options.filename,'w')
 	fp.write(filecontent)
 	fp.close()
