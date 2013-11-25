@@ -274,6 +274,7 @@ def main():
 	print content_list
 	print len(content_list)
 	filecontent='''
+
 # load configuration from a file
 # -config               
 
@@ -311,10 +312,10 @@ def main():
 -nice                             0 
 
 # maximum number of inst's to execute
--max:inst                         0 
+-max:inst                         75000000 
 
 # number of insts skipped before timing starts
--fastfwd                          0 
+-fastfwd                          300000000 
 
 # generate pipetrace, i.e., <fname|stdout|stderr> <range>
 # -ptrace                    <null> 
@@ -329,22 +330,22 @@ def main():
 -fetch:speed                      1 
 
 # branch predictor type {nottaken|taken|perfect|bimod|2lev|comb}
--bpred                        bimod 
+-bpred                        2lev 
 
 # bimodal predictor config (<table size>)
 -bpred:bimod           2048 
 
 # 2-level predictor config (<l1size> <l2size> <hist_size> <xor>)
--bpred:2lev            1 1024 8 0 
+-bpred:2lev            1 4096 8 0 
 
 # combining predictor config (<meta_table_size>)
 -bpred:comb            1024 
 
 # return address stack size (0 for no return stack)
--bpred:ras                        8 
+-bpred:ras                        4 
 
 # BTB config (<num_sets> <associativity>)
--bpred:btb             512 4 
+-bpred:btb             64 4 
 
 # speculative predictors update in {ID|WB} (default non-spec)
 # -bpred:spec_update         <null> 
@@ -352,7 +353,7 @@ def main():
 # instruction decode B/W (insts/cycle)
 -decode:width                     %s 
 
-# instruction issue B/W (insts/cycle)
+# instruction issue B/W (insts/cycle) need to modify
 -issue:width                      %s 
 
 # run pipeline with in-order issue
@@ -368,9 +369,9 @@ def main():
 -ruu:size                        %s 
 
 # load/store queue (LSQ) size
--lsq:size                         8 
+-lsq:size                         16 
 
-# l1 data cache config, i.e., {<config>|none}
+# l1 data cache config, i.e., {<config>|none}<name>:<nsets>:<bsize>:<assoc>:<repl> 
 -cache:dl1             %s 
 
 # l1 data cache hit latency (in cycles)
@@ -383,7 +384,7 @@ def main():
 -cache:dl2lat                     %s 
 
 # l1 inst cache config, i.e., {<config>|dl1|dl2|none}
--cache:il1              %s
+-cache:il1             %s
 
 # l1 instruction cache hit latency (in cycles)
 -cache:il1lat                     %s 
@@ -401,7 +402,7 @@ def main():
 -cache:icompress              false 
 
 # memory access latency (<first_chunk> <inter_chunk>)
--mem:lat               18 2 
+-mem:lat               150 20 
 
 # memory access bus width (in bytes)
 -mem:width                        8 
@@ -413,7 +414,7 @@ def main():
 -tlb:dtlb              dtlb:32:4096:4:l 
 
 # inst/data TLB miss latency (in cycles)
--tlb:lat                         30 
+-tlb:lat                         150 
 
 # total number of integer ALU's available
 -res:ialu                         %s 
@@ -436,7 +437,7 @@ def main():
 # operate in backward-compatible bugs mode (for testing only)
 -bugcompat                    false
 
-#ram_access_time                  %s 
+#ram_access_time                  %s
 	'''%tuple(content_list) 	
 	fp=open(options.filename,'w')
 	fp.write(filecontent)
