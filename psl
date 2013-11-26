@@ -1,2 +1,0 @@
-#! /usr/usc/bin/bash
-ps auxww | grep mao | grep $1
