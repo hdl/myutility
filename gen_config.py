@@ -184,7 +184,7 @@ def gen_content_list(options,l1inst_int,l1data_int,l2inst_int,l2data_int,sram_ac
 	share_list=options.share.split()
 
 	content_list = []
-	content_list.append(ruu_list[1]) #ifqsize
+	content_list.append(share_list[1]) #ifqsize
 	content_list.append(share_list[3])
 	content_list.append(share_list[2])
 	content_list.append(ruu_list[0])
