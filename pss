@@ -1,0 +1,6 @@
+#! /usr/usc/bin/bash
+if [ "$1" == "-l" ]; then
+	ps auxww | grep mao | grep $2
+else
+	ps aux | grep mao | grep $1
+fi
