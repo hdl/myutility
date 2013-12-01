@@ -218,7 +218,7 @@ def main():
 	
 	if(type(options.l1inst)==type(None)):
 		print "example:"
-		print '''gen_config.py -a "128 128 4 f" -b "256 32 2 l" -c "dl2" -d "1024 128 8 l" -r "32 2 1 1 1" -s "1 2 2 2" -f "test.cfg" ''' 
+		print '''gen_config.py -a "128 128 4 f" -b "128 128 4 l" -c "dl2" -d "1024 128 8 l" -r "32 2 1 1 1" -s "1 2 2 2" -f "test.cfg" ''' 
 		return 0
 
 	
