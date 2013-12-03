@@ -96,7 +96,7 @@ def print_inst_cycle(filename_list):
 
 	print "twolf_inst:		%s"%(twolf_inst)
 	print "twolf_cycle:		%s"%(twolf_cycle)
-	print "twolf_inst/cycle:	%s"%(str(float(twolf_inst)/float(art_cycle)))
+	print "twolf_inst/cycle:	%s"%(str(float(twolf_inst)/float(twolf_cycle)))
 
 	print "mcf_inst:		%s"%(mcf_inst)
 	print "mcf_cycle:		%s"%(mcf_cycle)
