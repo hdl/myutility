@@ -217,8 +217,8 @@ def main():
 	(options, args) = parser.parse_args()	
 	
 	if(type(options.l1inst)==type(None)):
-		print "example:"
-		print '''gen_config.py -a "128 128 4 f" -b "128 128 4 l" -c "dl2" -d "1024 128 8 l" -r "32 2 1 1 1" -s "1 2 2 2" -f "test.cfg" ''' 
+		print "example:\n note: the example has changed"
+		print '''gen_config.py -a "128 128 4 f" -b "512 128 4 l" -c "dl2" -d "1024 128 8 l" -r "64 2 1 1 1" -s "1 2 2 2" -f "test.cfg" ''' 
 		return 0
 
 	
@@ -363,13 +363,13 @@ def main():
 -issue:wrongpath               true 
 
 # instruction commit B/W (insts/cycle)
--commit:width                     4 
+-commit:width                     2 
 
 # register update unit (RUU) size
 -ruu:size                        %s 
 
 # load/store queue (LSQ) size
--lsq:size                         16 
+-lsq:size                         32 
 
 # l1 data cache config, i.e., {<config>|none}<name>:<nsets>:<bsize>:<assoc>:<repl> 
 -cache:dl1             %s 
