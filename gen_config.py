@@ -333,7 +333,7 @@ def main():
 -bpred                        2lev 
 
 # bimodal predictor config (<table size>)
--bpred:bimod           2048 
+-bpred:bimod           0 
 
 # 2-level predictor config (<l1size> <l2size> <hist_size> <xor>)
 -bpred:2lev            1 4096 8 0 
@@ -345,7 +345,7 @@ def main():
 -bpred:ras                        4 
 
 # BTB config (<num_sets> <associativity>)
--bpred:btb             64 4 
+-bpred:btb             128 4 
 
 # speculative predictors update in {ID|WB} (default non-spec)
 # -bpred:spec_update         <null> 
