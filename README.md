@@ -1,4 +1,6 @@
 myutility
 =========
 
-my utility shell or program
+My C, shell and python utilities. 
+
+Hope they can help you. 
